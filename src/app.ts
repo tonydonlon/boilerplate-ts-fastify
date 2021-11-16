@@ -29,7 +29,6 @@ app
   .command('send-message')
   .description('send a message to PUBSUB')
   .action(async() => {
-      console.log(config.util.getConfigSources())
       await sendMessage({
         foo: c,
         env: config.util.getEnv("NODE_ENV")

@@ -1,4 +1,4 @@
-import Fastify, { FastifyInstance, FastifyRequest } from 'fastify'
+import Fastify, { FastifyInstance, FastifyRequest, FastifyServerOptions } from 'fastify'
 import { v4 as uuidgen } from 'uuid'
 import { FooRequestSchema, FooResponseSchema } from '../../foo/schema'
 import logger from '../../lib/logger'
@@ -26,13 +26,18 @@ export interface WebAppConfig {
 const createServer = (appConfig?: WebAppConfig): WebApp => {
   try {
     const logLevel = appConfig?.logLevel || 'debug'
-    const fastify = Fastify({
-      logger: {
-        prettyPrint: logLevel === 'debug',
-        level: logLevel
-      },
+
+    const fastOpts:FastifyServerOptions = {
       genReqId: (req: FastifyRequest): string => req.headers['x-request-id']?.toString() || uuidgen()
-    })
+    }
+
+    if (process.env.NODE_ENV !== 'test') {
+      fastOpts.logger = {
+          prettyPrint: logLevel === 'debug',
+          level: logLevel
+      }
+    }
+    const fastify = Fastify(fastOpts)
 
     fastify.addHook('onSend', (request, reply, _payload, done) => {
       reply.header('x-request-id', request.id)

@@ -12,8 +12,8 @@
     "rest-api": "source .env && nodemon src/app.ts rest-api",
     "event-service": "source .env && nodemon src/app.ts event-service",
     "send-message": "./node_modules/.bin/ts-node src/app.ts send-message",
-    "test": "tap -Rspec --ts",
-    "test-watch": "tap -w --ts",
+    "test": "export NODE_ENV=test && tap -Rspec --ts",
+    "test-watch": " export NODE_ENV=test && tap -w --ts",
     "lint": "standard --ignore-pattern !node_modules/* */**/*.ts ",
     "clean": "rm -r dist/*"
   },
