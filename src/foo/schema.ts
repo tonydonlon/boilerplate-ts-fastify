@@ -29,6 +29,9 @@ export const FooResponseSchema = {
     id: {
       type: 'string',
       format: 'uuid'
+    },
+    result: {
+      type: 'string'
     }
   }
 } as const

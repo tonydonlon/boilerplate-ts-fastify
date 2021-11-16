@@ -1,9 +1,18 @@
-// TODO foo business logic
 import { FooRequest } from './schema'
 
-const FooManager = {
-    DoFoo: async (f: FooRequest): Promise<string> => {
-        return 'Foo Done'
+import logger from '../lib/logger'
+import { FastifyRequest } from 'fastify'
+
+const log = (context: any) => {
+    return logger().child({ module: 'Foomanager', reqId: context?.id })
+}
+
+const FooManager = (req: FastifyRequest) => {
+    return {
+        DoFoo: async (f: FooRequest): Promise<string> => {
+            log(req).info({ msg: `youre doing great, ${f.name}` })
+            return 'Foo Done'
+        }
     }
 }
 

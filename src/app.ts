@@ -5,6 +5,8 @@ import sendMessage from './cli/sendmessage'
 import config from 'config'
 
 const app = new CLICommand()
+
+// TODO parse all config here--config throws for missing configs
 const c = config.get('foo.bar')
 
 app
