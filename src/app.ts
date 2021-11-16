@@ -2,8 +2,10 @@ import { Command as CLICommand } from 'commander'
 import httpserver from './service/http/service'
 import eventservice from './service/eventservice/service'
 import sendMessage from './cli/sendmessage'
+import config from 'config'
 
 const app = new CLICommand()
+const c = config.get('foo.bar')
 
 app
   .command('rest-api')
@@ -27,7 +29,11 @@ app
   .command('send-message')
   .description('send a message to PUBSUB')
   .action(async() => {
-      await sendMessage({foo: 'bar'})
+      console.log(config.util.getConfigSources())
+      await sendMessage({
+        foo: c,
+        env: config.util.getEnv("NODE_ENV")
+      })
   })
 
 app.parse()

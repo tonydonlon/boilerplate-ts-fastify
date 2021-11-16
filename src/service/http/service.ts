@@ -1,6 +1,6 @@
 import Fastify, { FastifyRequest } from 'fastify'
 import { v4 as uuidgen } from 'uuid'
-import { FooRequestSchema, FooResponseSchema } from '../../schema'
+import { FooRequestSchema, FooResponseSchema } from '../../foo/schema'
 import logger from '../../lib/logger'
 import { HealthRoute } from './routehandlers/health'
 import { FooRoute } from './routehandlers/foo'

@@ -31,6 +31,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/config": "^0.0.40",
     "@types/got": "^9.6.12",
     "@types/node": "^16.11.7",
     "@types/pino": "^7.0.5",
