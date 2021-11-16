@@ -1,39 +1,23 @@
-// import t from 'tap'
-// // import server from '../src/server'
-
-// t.test('Array.indexOf', t => {
-//   const array = [1, 2, 3]
-//   t.test('when item is not found', t => {
-//     t.test('does not throw an error', t => {
-//       array.indexOf(4)
-//       // server().then((c) => console.log("sdfa"))
-//       t.end()
-//     })
-//     t.equal(array.indexOf(4), -1, 'returns -1')
-//     t.end()
-//   })
-//   t.end()
-// })
-// t.pass('this is fine')
-
-
-
-
-
 const tap = require('tap')
 const supertest = require('supertest')
-const buildFastify = require('../src/app')
 
-tap.test('GET `/` route', async (t: any) => {
-  const fastify = buildFastify()
+const createServer = require('../src/service/http/service').default
 
-  t.teardown(() => fastify.close())
+tap.test('GET `/foo` route', async (t: any) => {
+  console.log(createServer)
+  const webserver = createServer()
+  t.beforeEach(() => webserver.start())
+  t.teardown(() => webserver.close())
 
-  await fastify.ready()
-
-  const response = await supertest(fastify.server)
-    .get('/')
+  await webserver.ready()
+  const { httpservice } = webserver
+  await supertest(httpservice.server)
+    .post('/foo')
+    .send({'name': '', 'values': [{id: 123}]})
     .expect(200)
     .expect('Content-Type', 'application/json; charset=utf-8')
-  t.same(response.body, { hello: 'world' })
+    .then((res: any) => {
+       const reqId = res.headers['x-request-id']
+       t.same(res.body, {'id': reqId})
+     })
 })

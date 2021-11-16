@@ -1,4 +1,4 @@
-import Fastify, { FastifyRequest } from 'fastify'
+import Fastify, { FastifyInstance, FastifyRequest } from 'fastify'
 import { v4 as uuidgen } from 'uuid'
 import { FooRequestSchema, FooResponseSchema } from '../../foo/schema'
 import logger from '../../lib/logger'
@@ -9,6 +9,9 @@ const log = logger('webapp')
 
 export interface WebApp {
   start(): Promise<string>
+  close(): Promise<void>
+  ready(): Promise<undefined>
+  httpservice: FastifyInstance
 }
 
 export interface WebAppConfig {
@@ -65,7 +68,10 @@ const createServer = (appConfig?: WebAppConfig): WebApp => {
 
     const listenPort = appConfig?.port || '3000'
     return {
-      start: async () => await fastify.listen(listenPort)
+      start: async () => await fastify.listen(listenPort),
+      close: async () => await fastify.close(),
+      ready: async () => await fastify.ready(),
+      httpservice: fastify
     }
   } catch (err) {
     log.error(err)
