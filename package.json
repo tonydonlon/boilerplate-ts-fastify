@@ -1,0 +1,46 @@
+{
+  "name": "boilerplate-ts-fastify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "engines": {
+    "node": ">=16.12"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "source .env && nodemon src/app.ts rest-api",
+    "rest-api": "source .env && nodemon src/app.ts rest-api",
+    "event-service": "source .env && nodemon src/app.ts event-service",
+    "send-message": "./node_modules/.bin/ts-node src/app.ts send-message",
+    "test": "tap -Rspec --ts",
+    "test-watch": "tap -w --ts",
+    "lint": "standard --ignore-pattern !node_modules/* */**/*.ts ",
+    "clean": "rm -r dist/*"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/pubsub": "^2.18.2",
+    "ajv": "^8.8.0",
+    "commander": "^8.3.0",
+    "config": "^3.3.6",
+    "fastify": "^3.24.0",
+    "got": "^11.8.2",
+    "json-schema-to-ts": "^1.6.4",
+    "pino": "^7.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/got": "^9.6.12",
+    "@types/node": "^16.11.7",
+    "@types/pino": "^7.0.5",
+    "@types/tap": "^15.0.5",
+    "@types/uuid": "^8.3.1",
+    "nodemon": "^2.0.15",
+    "pino-pretty": "^7.2.0",
+    "supertest": "^6.1.6",
+    "tap": "^14.2.2",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  }
+}
