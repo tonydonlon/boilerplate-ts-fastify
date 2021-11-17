@@ -4,7 +4,7 @@ const supertest = require('supertest')
 const createServer = require('../src/service/http/service').default
 
 tap.test('POST `/foo` route', async (t: any) => {
-  const webserver = createServer()
+  const webserver = createServer({logLevel: process.env['LOG_LEVEL'] || 'debug'})
   t.beforeEach(() => webserver.start())
   t.teardown(() => webserver.close())
 
@@ -17,12 +17,12 @@ tap.test('POST `/foo` route', async (t: any) => {
     .expect('Content-Type', 'application/json; charset=utf-8')
     .then((res: any) => {
       const reqId = res.headers['x-request-id']
-      t.same(res.body, { 'id': reqId }, 'response is valid')
+      t.same(res.body, { 'id': reqId, result: 'Foo Done' }, 'response is valid')
     })
 })
 
 tap.test('POST `/foo` route 400 Bad request', async (t: any) => {
-  const webserver = createServer()
+  const webserver = createServer({logLevel: process.env['LOG_LEVEL'] || 'debug'})
   t.beforeEach(() => webserver.start())
   t.teardown(() => webserver.close())
 
@@ -44,7 +44,7 @@ tap.test('POST `/foo` route 400 Bad request', async (t: any) => {
 })
 
 tap.test('GET `/healthcheck` route', async (t: any) => {
-  const webserver = createServer()
+  const webserver = createServer({logLevel: process.env['LOG_LEVEL'] || 'debug'})
   t.beforeEach(() => webserver.start())
   t.teardown(() => webserver.close())
 

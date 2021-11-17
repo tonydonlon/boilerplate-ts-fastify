@@ -1,4 +1,5 @@
-import pino from 'pino';
+import pino from 'pino'
+import config from 'config'
 
 const Logger = (name?: string) => {
   const logLevel = process.env['LOG_LEVEL'] || 'debug'
@@ -10,6 +11,6 @@ const Logger = (name?: string) => {
     }
   }
   return pino(options)
-};
+}
 
 export default Logger

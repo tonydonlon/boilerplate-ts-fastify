@@ -10,7 +10,7 @@ const log = (context: any) => {
 const FooManager = (req: FastifyRequest) => {
     return {
         DoFoo: async (f: FooRequest): Promise<string> => {
-            log(req).info({ msg: `youre doing great, ${f.name}` })
+            log(req).info(`youre doing great, ${f.name}`)
             return 'Foo Done'
         }
     }
