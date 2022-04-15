@@ -44,6 +44,12 @@ const createServer = (appConfig?: WebAppConfig): WebApp => {
       done()
     })
 
+    fastify.register(require('fastify-cors'), {
+      origin:'*',
+      methods:['POST'],
+      
+    })
+
     fastify.get('/healthcheck',
       {
         schema: {
@@ -71,7 +77,13 @@ const createServer = (appConfig?: WebAppConfig): WebApp => {
       reply.send(FooRequestSchema)
     })
 
-    const listenPort = appConfig?.port || '3000'
+    fastify.post('/event', {}, (request, reply) => {
+      const json = request.body as any
+      log.debug({msg: 'Event payload', json})
+      reply.status(200).send()
+    })
+
+    const listenPort = appConfig?.port || '4000'
     return {
       start: async () => await fastify.listen(listenPort),
       close: async () => await fastify.close(),
