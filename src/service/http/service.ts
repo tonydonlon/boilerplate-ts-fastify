@@ -4,6 +4,8 @@ import { FooRequestSchema, FooResponseSchema } from '../../foo/schema'
 import logger from '../../lib/logger'
 import { HealthRoute } from './routehandlers/health'
 import { FooRoute } from './routehandlers/foo'
+import { EventRequestSchema } from '../../events/schema'
+import { EventsRoute } from './routehandlers/events'
 
 const log = logger('webapp')
 
@@ -27,14 +29,14 @@ const createServer = (appConfig?: WebAppConfig): WebApp => {
   try {
     const logLevel = appConfig?.logLevel || 'debug'
 
-    const fastOpts:FastifyServerOptions = {
+    const fastOpts: FastifyServerOptions = {
       genReqId: (req: FastifyRequest): string => req.headers['x-request-id']?.toString() || uuidgen()
     }
 
     if (process.env.NODE_ENV !== 'test') {
       fastOpts.logger = {
-          prettyPrint: logLevel === 'debug',
-          level: logLevel
+        prettyPrint: logLevel === 'debug',
+        level: logLevel
       }
     }
     const fastify = Fastify(fastOpts)
@@ -45,9 +47,9 @@ const createServer = (appConfig?: WebAppConfig): WebApp => {
     })
 
     fastify.register(require('fastify-cors'), {
-      origin:'*',
-      methods:['POST'],
-      
+      origin: '*',
+      methods: ['POST'],
+
     })
 
     fastify.get('/healthcheck',
@@ -76,12 +78,14 @@ const createServer = (appConfig?: WebAppConfig): WebApp => {
     fastify.get('/foo/schema', {}, (_request, reply) => {
       reply.send(FooRequestSchema)
     })
-
-    fastify.post('/event', {}, (request, reply) => {
-      const json = request.body as any
-      log.debug({msg: 'Event payload', json})
-      reply.status(200).send()
-    })
+    
+    fastify.post('/events',
+      {
+        schema: {
+          body: EventRequestSchema
+        }
+      }, EventsRoute()
+    )
 
     const listenPort = appConfig?.port || '4000'
     return {
