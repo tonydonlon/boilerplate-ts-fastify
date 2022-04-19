@@ -57,3 +57,37 @@ tap.test('GET `/healthcheck` route', async (t: any) => {
       t.same(res.text, 'ok', 'response is valid')
     })
 })
+
+tap.test('POST `/events` route', async (t: any) => {
+  const webserver = createServer({logLevel: process.env['LOG_LEVEL'] || 'debug'})
+  t.beforeEach(() => webserver.start())
+  t.teardown(() => webserver.close())
+
+  await webserver.ready()
+  const { httpservice } = webserver
+  await supertest(httpservice.server)
+    .post('/events')
+    .send({ 'events': [{ 'does': 'not matter' }] })
+    .expect(200)
+})
+
+tap.test('POST `/events` route 400 Bad request', async (t: any) => {
+  const webserver = createServer({logLevel: process.env['LOG_LEVEL'] || 'debug'})
+  t.beforeEach(() => webserver.start())
+  t.teardown(() => webserver.close())
+
+  await webserver.ready()
+  const { httpservice } = webserver
+  await supertest(httpservice.server)
+    .post('/events')
+    .send({ 'blah': '', 'values': [{ id: 123 }] })
+    .expect(400)
+    .then((res: any) => {
+      const exepectedErr = {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "body should have required property 'events'"
+      }
+      t.same(res.body, exepectedErr, 'expected error message received')
+    })
+})
